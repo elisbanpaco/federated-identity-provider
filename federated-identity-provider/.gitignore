@@ -1,0 +1,56 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.vspscc
+*.vssscc
+*.userprefs
+*.csproj.user
+
+# .NET
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.zip
+*.nupkg
+
+# Packages
+node_modules/
+packages/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Secrets (keep .env example)
+.env.local
+.env.production
+*.local.*
+.env
+
+# Database
+*.mdf
+*.ldf
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
