@@ -14,7 +14,7 @@ This is an open-source Identity Provider (IdP) ready for community contributions
   - Refresh Token Flow (session renewal without re-authentication)
 - **User management** with ASP.NET Core Identity
 - **Database** SQL Server with Entity Framework Core
-- **Modern UI** with Blazor Server
+- **UI** ASP.NET Core Razor Pages
 - **Extensible architecture** for multi-application integration
 
 ## Getting Started
@@ -37,11 +37,9 @@ git clone https://github.com/your-org/federated-identity-provider.git
 cd federated-identity-provider
 
 # Configure connection string (see Configuration section)
-cp .env.example .env  # Linux/macOS
-copy .env.example .env  # Windows
+# Edit appsettings.json or create .env file
 
 # Run migrations
-cd AuthServer.Host
 dotnet ef database update
 
 # Start the server
@@ -52,9 +50,21 @@ The application will be available at `http://localhost:5000`
 
 ## Configuration
 
-### Environment Variables
+### appsettings.json
 
-Create a `.env` file in the root directory:
+Configure the connection string in `appsettings.json`:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=YOUR_SERVER;Database=IdentityDB;Trusted_Connection=True;TrustServerCertificate=True"
+  }
+}
+```
+
+### Environment Variables (Optional)
+
+You can also use environment variables:
 
 ```env
 ConnectionStrings__DefaultConnection=Server=YOUR_SERVER;Database=IdentityDB;Trusted_Connection=True;TrustServerCertificate=True
@@ -72,19 +82,28 @@ dotnet ef database update
 
 ```
 federated-identity-provider/
-├── AuthServer.Host/
-│   ├── Components/          # Blazor components
-│   ├── Controllers/        # API controllers
-│   ├── Data/               # DbContext and configuration
-│   ├── DTOs/               # Data Transfer Objects
-│   ├── Entities/           # Domain entities
-│   ├── Migrations/         # EF Core migrations
-│   ├── Workers/            # Background workers
-│   ├── Program.cs          # Entry point
-│   └── *.csproj            # Project file
-├── .env                    # Environment variables
-├── .gitignore              # Git ignore patterns
-└── ServidorIdentidad.slnx  # Solution file
+├── Controllers/           # API controllers
+│   ├── AuthorizationController.cs
+│   └── ProtectedRoutesController.cs
+├── Data/                  # DbContext
+│   └── ApplicationDbContext.cs
+├── Models/                # Domain entities
+│   └── AppUser.cs
+├── Pages/                 # Razor Pages
+│   ├── Shared/
+│   ├── Error.cshtml
+│   ├── Index.cshtml
+│   └── Privacy.cshtml
+├── wwwroot/               # Static files (css, js, lib)
+├── Properties/
+│   └── launchSettings.json
+├── .env                   # Environment variables (not committed)
+├── appsettings.json       # Application configuration
+├── appsettings.Development.json
+├── federated-identity-provider.csproj
+├── federated-identity-provider.sln
+├── LICENSE
+└── README.md
 ```
 
 ## API Endpoints
@@ -93,6 +112,7 @@ federated-identity-provider/
 |----------|--------|-------------|
 | `/connect/token` | POST | Get access token |
 | `/connect/authorize` | GET | OAuth authorization |
+| `/api/protected` | GET | Protected resource example |
 
 ## Tech Stack
 
@@ -101,7 +121,7 @@ federated-identity-provider/
 - [OpenIddict](https://documentation.openiddict.io/)
 - [Entity Framework Core](https://learn.microsoft.com/ef/core)
 - [SQL Server](https://www.microsoft.com/sql-server)
-- [Blazor](https://blazor.net/)
+- [ASP.NET Core Identity](https://learn.microsoft.com/aspnet/core/security/authentication/identity)
 
 ## Contributing
 
@@ -116,9 +136,3 @@ We welcome contributions! Please read our contributing guidelines before submitt
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Community
-
-- 💬 Join our discussions
-- 🐛 Report bugs via Issues
-- ⭐ Star the project if you find it useful
