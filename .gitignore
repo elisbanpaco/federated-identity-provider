@@ -15,7 +15,6 @@
 *.vspscc
 *.vssscc
 *.userprefs
-*.csproj.user
 
 # .NET
 *.dll
@@ -26,10 +25,6 @@
 *.zip
 *.nupkg
 
-# Packages
-node_modules/
-packages/
-
 # IDE
 .idea/
 *.swp
@@ -38,15 +33,19 @@ packages/
 .DS_Store
 Thumbs.db
 
-# Secrets (keep .env example)
+# Secrets - IMPORTANT: Never commit secrets
+.env
 .env.local
 .env.production
 *.local.*
-.env
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
 
 # Database
 *.mdf
 *.ldf
+*.db
 
 # Logs
 *.log
@@ -54,3 +53,6 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+# NuGet
+packages/
