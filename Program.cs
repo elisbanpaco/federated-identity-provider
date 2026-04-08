@@ -2,22 +2,31 @@ using federated_identity_provider.Data;
 using federated_identity_provider.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using federated_identity_provider.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Leemos la cadena de conexión del appsettings.json
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("sqlServerDb"));
     
     // Le decimos a EF Core que registre las tablas de OpenIddict
     options.UseOpenIddict();
 });
 
-builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+// builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddIdentity<AppUser, IdentityRole>(options => 
+    {
+        options.SignIn.RequireConfirmedAccount = true; 
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddOpenIddict()
     // 1. Configurar la capa de Core (Integración con Base de Datos)
@@ -36,7 +45,8 @@ builder.Services.AddOpenIddict()
         // Configuramos flujos permitidos (Authorization Code para web, Client Credentials para APIs)
         options.AllowAuthorizationCodeFlow()
                .AllowClientCredentialsFlow()
-               .AllowRefreshTokenFlow();
+               .AllowRefreshTokenFlow()
+               .AllowPasswordFlow();
 
         // Para desarrollo: Usamos certificados falsos automáticos (para no lidiar con SSL reales aún)
         options.AddDevelopmentEncryptionCertificate()
